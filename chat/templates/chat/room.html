@@ -10,6 +10,7 @@
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
     <script>
+
         const username = {{ username }};
         const roomName = {{ room_name_json }};
 
@@ -23,7 +24,8 @@
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').value += (data.message + '\n');
+            console.log(data)
+            document.querySelector('#chat-log').value += (data.author + ':' + data.message + '\n');
         };
 
         chatSocket.onclose = function(e) {

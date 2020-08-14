@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Room(models.Model):
-    room = models.TextField()
+    room = models.TextField(max_length=100)
 
     def __str__(self):
         return self.room
