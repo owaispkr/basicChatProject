@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
@@ -22,10 +23,25 @@
             + '/'
         );
 
+        chatSocket.onopen = function(event) {
+            console.log("Socket Connected")
+            chatSocket.send(JSON.stringify({
+                'command':'previous_messages'
+            }));
+        };
+
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log(data)
-            document.querySelector('#chat-log').value += (data.author + ':' + data.message + '\n');
+            if(data.command=='new_messages'){
+               document.querySelector('#chat-log').value += (data.author + ':' + data.message + '\n');
+            }
+            else if(data.command=='previous_messages') {
+                data.messages.map(function(key, value){
+                     document.querySelector('#chat-log').value += (key.author + ':' + key.message + '\n');
+                })
+            }
+
         };
 
         chatSocket.onclose = function(e) {
@@ -46,7 +62,8 @@
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'from': username,
-                'room': roomName
+                'room': roomName,
+                'command':'new_messages'
             }));
             messageInputDom.value = '';
         };
