@@ -1,15 +1,14 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
-from .models import Room
+from .models import Room, Message
 import json
 
 def index(request):
-    room = Room.objects.all()
-    room_obj = []
-    for r in room:
-        room_obj.append(str(r.room))
-    return render(request, 'chat/index.html', {'room': json.dumps(room_obj)})
+    # room = list(Room.objects.all().values('room'))
+    room = list(Room.objects.all().values('room'))
+    print(room)
+    return render(request, 'chat/index.html', {'room': room})
 
 @login_required
 def room(request, room_name):

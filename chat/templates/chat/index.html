@@ -10,9 +10,12 @@
     <input id="room-name-input" type="text" size="100"><br>
     <input id="room-name-submit" type="button" value="Enter">
 
+    <ul>
+    {% for room_list in room %}
+        <li><a href="/chat/{{ room_list.room }}">{{ room_list.room }}</a></li>
+    {% endfor %}
+    </ul>
     <script>
-        const room = {{ room }};
-        console.log(room)
         document.querySelector('#room-name-input').focus();
         document.querySelector('#room-name-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
