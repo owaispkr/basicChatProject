@@ -12,7 +12,6 @@ User = get_user_model()
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_message(self, room):
-        print(room)
         messages = Message.last_10_messages(self, room)
         content = {
             'command': 'previous_messages',

@@ -15,7 +15,7 @@
 
     <ul>
     {% for room_list in room  %}
-        <li><a href="/chat/chatroom/{{ room_list.room }}">{{ room_list.room }}</a></li>
+        <li><a href="/chat/{{ room_list.room }}">{{ room_list.room }}</a></li>
     {% endfor %}
     </ul>
     <script>
