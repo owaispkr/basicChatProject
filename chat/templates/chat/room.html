@@ -10,6 +10,10 @@
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
+
+    <h1>Room: {{ room_name_json }}</h1>
+    <h3>User: {{ username }}</h3>
+
     <script>
 
         const username = {{ username }};
@@ -26,7 +30,8 @@
         chatSocket.onopen = function(event) {
             console.log("Socket Connected")
             chatSocket.send(JSON.stringify({
-                'command':'previous_messages'
+                'command':'previous_messages',
+                'room': roomName
             }));
         };
 
@@ -34,11 +39,13 @@
             const data = JSON.parse(e.data);
             console.log(data)
             if(data.command=='new_messages'){
-               document.querySelector('#chat-log').value += (data.author + ':' + data.message + '\n');
+               {#document.querySelector('#chat-log').value += (data.author + ':' + data.message + '\n');#}
+                $('#chat-log').val( $('#chat-log').val() + (data.author + ':' + data.message + '\n'));
             }
             else if(data.command=='previous_messages') {
                 data.messages.map(function(key, value){
-                     document.querySelector('#chat-log').value += (key.author + ':' + key.message + '\n');
+                     {#document.querySelector('#chat-log').value += (key.timestamp.substr(0,16) +':'+ key.author + ':' + key.message + '\n');#}
+                     $('#chat-log').val( $('#chat-log').val()  + (key.timestamp.substr(0,16) +':'+ key.author + ':' + key.message + '\n')) ;
                 })
             }
 
@@ -48,16 +55,15 @@
             console.error('Chat socket closed unexpectedly');
         };
 
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
+        $('#chat-message-input').focus();
+        $('#chat-message-input').keyup(function(e) {
             if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
+                $('#chat-message-submit').click();
             }
-        };
+        }) ;
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
+        $('#chat-message-submit').click(function(e) {
+            const message = $('#chat-message-input').val();
 
             chatSocket.send(JSON.stringify({
                 'message': message,
@@ -65,8 +71,8 @@
                 'room': roomName,
                 'command':'new_messages'
             }));
-            messageInputDom.value = '';
-        };
+            $('#chat-message-input').val('');
+        });
     </script>
 </body>
 </html>

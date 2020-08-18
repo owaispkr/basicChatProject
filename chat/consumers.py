@@ -11,8 +11,9 @@ User = get_user_model()
 
 class ChatConsumer(WebsocketConsumer):
 
-    def fetch_message(self):
-        messages = Message.last_10_messages(self)
+    def fetch_message(self, room):
+        print(room)
+        messages = Message.last_10_messages(self, room)
         content = {
             'command': 'previous_messages',
             'messages': self.messages_to_json(messages)
@@ -29,7 +30,6 @@ class ChatConsumer(WebsocketConsumer):
         return result
 
     def message_to_json(self, message):
-        print(message)
         return {
             'id': message.id,
             'message': message.content,
@@ -57,9 +57,8 @@ class ChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print(text_data_json['command'])
         if text_data_json['command'] == "previous_messages":
-            self.fetch_message()
+            self.fetch_message(text_data_json['room'])
 
         else:
             message = text_data_json['message']
