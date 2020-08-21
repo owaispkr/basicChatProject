@@ -20,9 +20,9 @@ def room(request, room_name):
     })
 
 @login_required
-def chatroom(request, room_name):
-    print("agaya")
+def chatroom(request):
+    room = list(Room.objects.all().values('room'))
     return render(request, 'chat/chatroom.html', {
-        'room_name_json': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),
+        'room': room
     })
