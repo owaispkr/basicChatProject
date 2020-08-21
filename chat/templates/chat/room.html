@@ -16,6 +16,7 @@
 
     <script>
 
+
         const username = {{ username }};
         const roomName = {{ room_name_json }};
 
@@ -57,7 +58,9 @@
 
         $('#chat-message-input').focus();
         $('#chat-message-input').keyup(function(e) {
+
             if (e.keyCode === 13) {  // enter, return
+
                 $('#chat-message-submit').click();
             }
         }) ;

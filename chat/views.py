@@ -21,7 +21,8 @@ def room(request, room_name):
 
 @login_required
 def chatroom(request):
-    room = list(Room.objects.all().values('room'))
+    room = list(Room.objects.all().values())
+    print(room)
     return render(request, 'chat/chatroom.html', {
         'username': mark_safe(json.dumps(request.user.username)),
         'room': room

@@ -4,6 +4,7 @@ from django.db import models
 
 class Room(models.Model):
     room = models.TextField(max_length=100)
+    room_description = models.TextField(max_length=100, null=True)
 
     def __str__(self):
         return self.room
@@ -18,5 +19,8 @@ class Message(models.Model):
     def __str__(self):
         return self.author.username
 
-    def last_10_messages(self, room):
+    def messages_on_load(self, room):
         return Message.objects.filter(room__room=room).order_by('-timestamp').all()[:10]
+
+    def conversation_history(self, room, msg_limit_from, msg_limit_to):
+        return Message.objects.filter(room__room=room).order_by('-timestamp').all()[msg_limit_from:msg_limit_to]
